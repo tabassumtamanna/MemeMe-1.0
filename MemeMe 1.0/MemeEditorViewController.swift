@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MemeEditorViewController.swift
 //  MemeMe 1.0
 //
 //  Created by Tabassum Tamanna on 12/4/20.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
     // MARK: - IBOutlets
     @IBOutlet weak var imagePickerView: UIImageView!
@@ -41,14 +41,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         topTextField.delegate = self
         bottomTextField.delegate = self
         
+        
         topTextField.defaultTextAttributes = memeTextAttributes
         bottomTextField.defaultTextAttributes = memeTextAttributes
         
         topTextField.textAlignment    = .center
         bottomTextField.textAlignment = .center
         
-        topTextField.text    = "TOP"
-        bottomTextField.text = "BOTTOM"
+        prepareTextField(textField: topTextField, defaultText:"TOP")
+        prepareTextField(textField: bottomTextField, defaultText:"BOTTOM")
         
         shareButton.isEnabled = false
     }
@@ -66,6 +67,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
         super.viewWillDisappear(animated)
         unsubscribeFromKeyboardNotifications()
+    }
+    
+    // MARK: - Prepare Text Field
+    func prepareTextField(textField: UITextField, defaultText: String) {
+        textField.text = defaultText;
     }
     
     // MARK: - Pick an Image from camera or library
@@ -119,15 +125,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @objc func keyboardWillShow(_ notification: Notification){
         
         if(bottomTextField.isEditing && view.frame.origin.y == 0 ){
-            view.frame.origin.y -= getKeyboardHight(notification)
+            view.frame.origin.y = -getKeyboardHight(notification)
         }
     }
      
     // MARK: - Keyboard Will Hide
     @objc func keyboardWillHide(_ notification: Notification){
-        if(view.frame.origin.y != 0 ){
+        
             view.frame.origin.y = 0
-        }
+        
     }
         
     // MARK: - Get Keyboard Hight
@@ -200,10 +206,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // MARK: - Meme Editor View
     func memeEditorView(){
-       self.topTextField.text = "TOP"
-       self.bottomTextField.text = "BOTTOM"
-       self.imagePickerView.image = nil
-       self.shareButton.isEnabled = false
+        
+        prepareTextField(textField: topTextField, defaultText:"TOP")
+        prepareTextField(textField: bottomTextField, defaultText:"BOTTOM")
+        self.imagePickerView.image = nil
+        self.shareButton.isEnabled = false
    }
 }
 
